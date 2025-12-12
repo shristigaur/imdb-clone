@@ -1,9 +1,9 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
 function Search(){
     const [text, setText]=useState("");
     const [suggestion, setSuggestion]=useState([]);
-    const [timer, setTimer]=useState(null);
+    const timerRef = useRef(null);
     const getSuggestion= async (word)=>{
         const res= await fetch(`https://api.datamuse.com/sug?s=${word}`);
         const data=await res.json();
@@ -14,12 +14,13 @@ function Search(){
             setSuggestion([]);
             return;
         }
-         if (timer) clearTimeout(timer);
 
          const newTimer= setTimeout(()=>{
             getSuggestion(text);
          }, 400)
-         setTimer(newTimer);
+         timerRef.current = newTimer;
+
+         return () => clearTimeout(newTimer);
     }, [text]);
     return (
         <>
