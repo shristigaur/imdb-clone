@@ -3,6 +3,7 @@ import Search from './Pages/Search';
 import MovieCard from './Componants/MovieCard';
 import { useEffect, useState} from "react";
 import { getPopularMovies } from './Serivces/api';
+import Todo from './Pages/Todo';
 
 
 function App() {
@@ -15,6 +16,7 @@ function App() {
   
   return (
     <div className="App">
+      <Todo />
       <Search />
       {movies.map((movie)=>(
         <MovieCard
