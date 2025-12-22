@@ -1,14 +1,10 @@
-function TodoItem({todo, onToggle,onDelete}){
-    return (
-        <>
-          <li className={`todo-item ${todo.completed ? "done" : ""}`}>
-            <span onClick={()=>onToggle(todo.id)}>
-                {todo.text}
-            </span>
-            <button onClick={()=> onDelete(todo.id)}>x</button>
-          </li>
-        </>
-    );
-}
+const TodoItem = ({ note, index, deleteNote }) => {
+  return (
+    <li>
+      {note}
+      <button onClick={() => deleteNote(index)}>❌</button>
+    </li>
+  );
+};
 
 export default TodoItem;

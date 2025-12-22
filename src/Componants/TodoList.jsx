@@ -1,18 +1,18 @@
 import TodoItem from "./TodoItem";
-function TodoList({todos, onToggle, onDelete}){
-    return (
-        <>
-          <ul className="todo-list">
-            {todos.map(todo=>(
-                <TodoItem
-                  key={todo.id}
-                  todo={todo}
-                  onToggle={onToggle}
-                  onDelete={onDelete}
-                />
-            ))}
-          </ul>
-        </>
-    );
-}
+
+const TodoList = ({ notes, deleteNote }) => {
+  return (
+    <ul>
+      {notes.map((note, index) => (
+        <TodoItem
+          key={index}
+          note={note}
+          index={index}
+          deleteNote={deleteNote}
+        />
+      ))}
+    </ul>
+  );
+};
+
 export default TodoList;

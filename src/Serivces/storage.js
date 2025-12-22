@@ -1,7 +1,8 @@
-export const getTodo=()=>{
-    const data=localStorage.getItem("todos");
-    return data ? JSON.parse(data) : [];
+export const getNotes = () => {
+  const notes = localStorage.getItem("notes");
+  return notes ? JSON.parse(notes) : [];
 };
-export const saveTodo=(todos)=>{
-    localStorage.setItem("todos", JSON.stringify(todos));
+
+export const saveNotes = (notes) => {
+  localStorage.setItem("notes", JSON.stringify(notes));
 };
