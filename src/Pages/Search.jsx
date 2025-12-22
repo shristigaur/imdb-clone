@@ -1,55 +1,54 @@
-import { useState, useEffect, useRef } from "react";
+import { useEffect, useState } from "react";
+import { searchMovies } from "../Services/api";
+import MovieCard from "../Components/MovieCard";
 
-function Search(){
-    const [text, setText]=useState("");
-    const [suggestion, setSuggestion]=useState([]);
-    const timerRef = useRef(null);
-    const getSuggestion= async (word)=>{
-        const res= await fetch(`https://api.datamuse.com/sug?s=${word}`);
-        const data=await res.json();
-        setSuggestion(data);
+const Search = () => {
+  const [query, setQuery] = useState("");
+  const [movies, setMovies] = useState([]);
+  const [loading, setLoading] = useState(false);
+
+  useEffect(() => {
+    if (!query) {
+      setMovies([]);
+      return;
     }
-    useEffect(()=>{
-        if(text.length<2){
-            setSuggestion([]);
-            return;
-        }
 
-         const newTimer= setTimeout(()=>{
-            getSuggestion(text);
-         }, 400)
-         timerRef.current = newTimer;
+    const timer = setTimeout(() => {
+      setLoading(true);
 
-         return () => clearTimeout(newTimer);
-    }, [text]);
-    return (
-        <>
-          <div className="search-container">
-            <input
-               type="text"
-               value={text}
-               onChange={(e)=>setText(e.target.value)}
-               placeholder="search any word"
-               className="search-input"
-            />
-            {suggestion.length >0 &&(
-                <ul className="suggestion-box">
-                    {suggestion.map((item, index)=>(
-                        <li
-                          key={index}
-                          onClick={()=>{
-                            setText(item.word);
-                            setSuggestion([]);
-                          }}
-                          className="search-item"
-                        >
-                            {item.word}
-                        </li>
-                    ))}
-                </ul>
-            )}
-          </div>
-        </>
-    )
-}
+      searchMovies(query).then((results) => {
+        setMovies(results);
+        setLoading(false);
+      });
+    }, 500); // 👈 Debounce delay
+
+    return () => clearTimeout(timer);
+  }, [query]);
+
+  return (
+    <div style={{ padding: "20px" }}>
+      <h2>🎬 Movie Search</h2>
+
+      <input
+        type="text"
+        placeholder="Search movie..."
+        value={query}
+        onChange={(e) => setQuery(e.target.value)}
+      />
+
+      {loading && <p>Loading...</p>}
+
+      {!loading && movies.length === 0 && query && (
+        <p>❌ No Results Found</p>
+      )}
+
+      <div style={{ display: "flex", flexWrap: "wrap", gap: "10px" }}>
+        {movies.map((movie) => (
+          <MovieCard key={movie.imdbID} movie={movie} />
+        ))}
+      </div>
+    </div>
+  );
+};
+
 export default Search;
